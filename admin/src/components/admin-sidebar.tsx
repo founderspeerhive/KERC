@@ -16,7 +16,6 @@ import {
   SidebarMenuSubTrigger,
   SidebarMenuSubContent
 } from "@/components/ui/sidebar"
-import { UserButton } from "@clerk/nextjs"
 import { 
   Home, 
   Users, 
@@ -143,9 +142,11 @@ export function AdminSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-      <SidebarFooter className="border-t">
-        <UserButton />
-      </SidebarFooter>
+      {/* <SidebarFooter className="border-t">
+        <div className="p-2 text-xs text-muted-foreground">
+          KERC Admin v1.0
+        </div>
+      </SidebarFooter> */}
     </Sidebar>
   )
 }
