@@ -8,19 +8,10 @@ import { ChevronDown, ChevronRight, Menu } from "lucide-react"
 import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
-// Create a utils.ts file if you don't have one
-// src/lib/utils.ts
-// import { clsx, type ClassValue } from "clsx"
-// import { twMerge } from "tailwind-merge"
-// 
-// export function cn(...inputs: ClassValue[]) {
-//   return twMerge(clsx(inputs))
-// }
-
 // Sidebar Context
 interface SidebarContextValue {
   open: boolean
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>
+  setOpen: (value: boolean) => void
   collapsible: boolean
 }
 
@@ -52,8 +43,18 @@ export function SidebarProvider({
 }: SidebarProviderProps) {
   const [open, setOpen] = React.useState(defaultOpen)
 
+  // Create a stable reference to the context value
+  const value = React.useMemo(
+    () => ({
+      open,
+      setOpen,
+      collapsible,
+    }),
+    [open, collapsible]
+  )
+
   return (
-    <SidebarContext.Provider value={{ open, setOpen, collapsible }}>
+    <SidebarContext.Provider value={value}>
       {children}
     </SidebarContext.Provider>
   )

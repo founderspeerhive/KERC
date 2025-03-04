@@ -20,7 +20,8 @@ import {
   BarChart3, 
   Calendar, 
   MessageSquare,
-  ShieldAlert
+  ShieldAlert,
+  Upload
 } from "lucide-react"
 import Link from "next/link"
 import {
@@ -44,7 +45,7 @@ export function AdminSidebar() {
           <SidebarGroupContent>
             <SidebarMenu>
               <SidebarMenuItem>
-                <Link href="/admin" className="w-full">
+                <Link href="/dashboard" className="w-full">
                   <SidebarMenuButton>
                     <Home className="h-4 w-4 mr-2" />
                     Dashboard
@@ -80,6 +81,30 @@ export function AdminSidebar() {
                   <SidebarMenuButton>
                     <BarChart3 className="h-4 w-4 mr-2" />
                     Statistics
+                  </SidebarMenuButton>
+                </Link>
+              </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+        
+        <SidebarGroup>
+          <SidebarGroupLabel>Medical Records</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <Link href="/medical-records/upload" className="w-full">
+                  <SidebarMenuButton>
+                    <Upload className="h-4 w-4 mr-2" />
+                    Upload Records
+                  </SidebarMenuButton>
+                </Link>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <Link href="/medical-records/requests" className="w-full">
+                  <SidebarMenuButton>
+                    <FileText className="h-4 w-4 mr-2" />
+                    Access Requests
                   </SidebarMenuButton>
                 </Link>
               </SidebarMenuItem>
