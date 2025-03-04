@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import SidebarContent from "@/components/sidebar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { UserButton, SignedIn, SignedOut, SignInButton, SignUpButton } from "@clerk/nextjs";
+
 import {
   Card,
   CardContent,
@@ -31,93 +31,11 @@ export default function HomePage() {
   return (
     <div className="flex min-h-screen flex-col">
       {/* Header */}
-      <header className="sticky top-0 z-10 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6">
-        <div className="flex items-center gap-2 font-semibold">
-          <FileText className="h-6 w-6 text-teal-600" />
-          <span className="text-lg">MedRecords</span>
-        </div>
-        <div className="relative w-full max-w-sm">
-          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-          <Input
-            type="search"
-            placeholder="Search records..."
-            className="w-full bg-muted pl-8"
-          />
-        </div>
-        <div className="ml-auto flex items-center gap-4">
-          <Button variant="ghost" size="icon">
-            <Bell className="h-5 w-5" />
-          </Button>
-          <Button variant="ghost" size="icon">
-            <HelpCircle className="h-5 w-5" />
-          </Button>
-          <Button variant="ghost" size="icon">
-            <Settings className="h-5 w-5" />
-          </Button>
-          <SignedIn>
-            <UserButton />
-          </SignedIn>
-          <SignedOut>
-            <SignInButton />
-            <SignUpButton />
-          </SignedOut>
-        </div>
-      </header>
 
       {/* Main Content */}
       <div className="flex flex-1">
         {/* Sidebar */}
-        <aside className="hidden w-[240px] flex-col border-r bg-muted/40 sm:flex">
-          <div className="flex flex-col gap-2 p-4">
-            <Button variant="outline" className="justify-start gap-2">
-              <FilePlus className="h-4 w-4" />
-              New Upload
-            </Button>
-          </div>
-          <nav className="grid gap-1 px-2">
-            <Button variant="ghost" className="justify-start gap-2">
-              <FileText className="h-4 w-4" />
-              All Records
-            </Button>
-            <Button variant="ghost" className="justify-start gap-2">
-              <Clock className="h-4 w-4" />
-              Recent
-            </Button>
-            <Button variant="ghost" className="justify-start gap-2">
-              <Star className="h-4 w-4" />
-              Starred
-            </Button>
-            <Button variant="ghost" className="justify-start gap-2">
-              <Calendar className="h-4 w-4" />
-              Appointments
-            </Button>
-            <Button variant="ghost" className="justify-start gap-2">
-              <Users className="h-4 w-4" />
-              Shared with Me
-            </Button>
-          </nav>
-          <div className="mt-4 px-2">
-            <h3 className="mb-2 px-4 text-sm font-semibold">Categories</h3>
-            <div className="grid gap-1">
-              <Button variant="ghost" className="justify-start gap-2">
-                <Folder className="h-4 w-4 text-blue-500" />
-                Lab Results
-              </Button>
-              <Button variant="ghost" className="justify-start gap-2">
-                <Folder className="h-4 w-4 text-green-500" />
-                Prescriptions
-              </Button>
-              <Button variant="ghost" className="justify-start gap-2">
-                <Folder className="h-4 w-4 text-amber-500" />
-                Imaging
-              </Button>
-              <Button variant="ghost" className="justify-start gap-2">
-                <Folder className="h-4 w-4 text-purple-500" />
-                Visit Notes
-              </Button>
-            </div>
-          </div>
-        </aside>
+        <SidebarContent />
 
         {/* Content */}
         <main className="flex-1 overflow-auto p-4 md:p-6">
