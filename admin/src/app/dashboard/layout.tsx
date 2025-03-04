@@ -3,6 +3,7 @@ import { SidebarProvider } from "@/components/ui/sidebar"
 import { AdminSidebar } from "@/components/admin-sidebar"
 import { ReactNode } from "react"
 
+
 export default function AdminLayout({ children }: { children: ReactNode }) {
   return (
     <SidebarProvider>

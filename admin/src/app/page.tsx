@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 export default function Home() {
   return (
     <div className="flex min-h-screen">
-      <AdminSidebar />
       <div className="p-6 flex-1">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-3xl font-bold tracking-tight">Admin Dashboard</h1>

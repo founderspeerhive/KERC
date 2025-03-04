@@ -1,4 +1,3 @@
-// src/components/admin-sidebar.tsx
 "use client"
 
 import { 
@@ -12,9 +11,6 @@ import {
   SidebarGroup,
   SidebarGroupLabel,
   SidebarGroupContent,
-  SidebarMenuSub,
-  SidebarMenuSubTrigger,
-  SidebarMenuSubContent
 } from "@/components/ui/sidebar"
 import { 
   Home, 
@@ -27,8 +23,16 @@ import {
   ShieldAlert
 } from "lucide-react"
 import Link from "next/link"
+import {
+  SignedIn,
+  UserButton,
+  useUser,
+} from '@clerk/nextjs'
+import { Button } from "@/components/ui/button";
 
 export function AdminSidebar() {
+  const { user } = useUser();
+  
   return (
     <Sidebar>
       <SidebarHeader className="border-b">
@@ -79,33 +83,6 @@ export function AdminSidebar() {
                   </SidebarMenuButton>
                 </Link>
               </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuSub>
-                  <SidebarMenuSubTrigger>
-                    <Calendar className="h-4 w-4 mr-2" />
-                    Schedule
-                  </SidebarMenuSubTrigger>
-                  <SidebarMenuSubContent>
-                    <SidebarMenu>
-                      <SidebarMenuItem>
-                        <Link href="/admin/schedule/daily" className="w-full">
-                          <SidebarMenuButton>Daily</SidebarMenuButton>
-                        </Link>
-                      </SidebarMenuItem>
-                      <SidebarMenuItem>
-                        <Link href="/admin/schedule/weekly" className="w-full">
-                          <SidebarMenuButton>Weekly</SidebarMenuButton>
-                        </Link>
-                      </SidebarMenuItem>
-                      <SidebarMenuItem>
-                        <Link href="/admin/schedule/monthly" className="w-full">
-                          <SidebarMenuButton>Monthly</SidebarMenuButton>
-                        </Link>
-                      </SidebarMenuItem>
-                    </SidebarMenu>
-                  </SidebarMenuSubContent>
-                </SidebarMenuSub>
-              </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
@@ -142,11 +119,16 @@ export function AdminSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-      {/* <SidebarFooter className="border-t">
-        <div className="p-2 text-xs text-muted-foreground">
-          KERC Admin v1.0
-        </div>
-      </SidebarFooter> */}
+      <SidebarFooter className="border-t p-4">
+        <SignedIn>
+          <div className="flex items-center gap-3">
+            <UserButton/>
+            <div className="flex flex-col">
+              <span className="text-sm font-medium">{user?.fullName}</span>
+            </div>
+          </div>
+        </SignedIn>
+      </SidebarFooter>
     </Sidebar>
   )
 }
