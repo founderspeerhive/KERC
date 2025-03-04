@@ -1,0 +1,32 @@
+# Dependency directories
+node_modules/
+
+# Hardhat files
+cache/
+artifacts/
+typechain-types/
+
+# Environment files
+.env
+.env.local
+
+# Coverage directory used by tools like istanbul
+coverage/
+coverage.json
+
+# Hardhat temporary files
+.hardhat/
+
+# IDE files
+.idea/
+.vscode/
+
+# Debug logs
+*.log
+
+# Build files
+dist/
+build/
+
+# Local Hardhat network data
+deployments/hardhat/
