@@ -1,0 +1,9 @@
+.feature2Wrapper {
+  margin-top: -120px; /* Adjust this value to control the overlap */
+}
+
+.featureWrapper {
+  margin-bottom: 0;
+  z-index: 10;
+  position: relative;
+}

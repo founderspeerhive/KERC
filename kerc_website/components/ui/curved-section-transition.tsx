@@ -57,6 +57,12 @@ export const CurvedSectionTransition = forwardRef<HTMLDivElement, CurvedSectionT
       const updatePath = () => {
         const curveValue = curveFactor.get();
         
+        // When curveValue is 0, make the path cover the entire area with no curve
+        if (curveValue === 0) {
+          setPath("M0,0 L100,0 L100,100 L0,100 Z");
+          return;
+        }
+        
         if (position === "bottom") {
           setPath(`M0,0 L100,0 L100,calc(100% - ${curveValue}px) Q50,100% 0,calc(100% - ${curveValue}px) Z`);
         } else {

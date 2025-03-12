@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { ArrowDown, ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Stats from "../components/sats";
@@ -20,8 +20,26 @@ export default function Hero() {
   );
   
   const scrollY = useScrollPosition();
-  const heroHeight = 800; // Approximate height of hero section
-  const scrollProgress = Math.min(1, scrollY / heroHeight);
+  const [heroHeight, setHeroHeight] = useState(800);
+  
+  // Calculate the scroll progress for transition effects
+  // Only apply effects when scrolling out of the hero section
+  // We want no effect (0) when fully in viewport, and full effect (1) when exiting
+  const viewThreshold = heroHeight * 0.15; // Start effect when 15% scrolled
+  const scrollProgress = scrollY < viewThreshold ? 0 : Math.min(1, (scrollY - viewThreshold) / (heroHeight * 0.3));
+  
+  // Update hero height on mount and resize
+  useEffect(() => {
+    const updateHeight = () => {
+      if (ref.current) {
+        setHeroHeight(ref.current.offsetHeight);
+      }
+    };
+    
+    updateHeight();
+    window.addEventListener('resize', updateHeight);
+    return () => window.removeEventListener('resize', updateHeight);
+  }, []);
 
   return (
     <CurvedSectionTransition
@@ -29,11 +47,11 @@ export default function Hero() {
       position="bottom"
       curveHeight={scrollProgress * 100}
       bgColor="transparent"
-      className="relative w-full"
+      className="relative w-full min-h-screen"
     >
       <ResponsiveContainer
         ref={ref}
-        className="relative w-full"
+        className="relative w-full min-h-screen"
         gradient={true}
         gradientFrom="blue-900"
         gradientTo="indigo-800"
@@ -57,7 +75,7 @@ export default function Hero() {
           />
         </div>
 
-        <div className="container mx-auto relative z-10 grid gap-8 md:grid-cols-2 items-center p-6 md:p-12 lg:p-16 h-full">
+        <div className="container mx-auto relative z-10 grid gap-8 md:grid-cols-2 items-center p-6 md:p-12 lg:p-16 h-full min-h-[calc(100vh-120px)]">
           {/* Left Content */}
           <AnimatedElement
             variant="fadeInLeft"

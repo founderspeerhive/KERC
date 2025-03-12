@@ -35,11 +35,7 @@ const Feature = () => {
     
     updateDimensions();
     window.addEventListener('resize', updateDimensions);
-    window.addEventListener('scroll', updateDimensions);
-    return () => {
-      window.removeEventListener('resize', updateDimensions);
-      window.removeEventListener('scroll', updateDimensions);
-    };
+    return () => window.removeEventListener('resize', updateDimensions);
   }, []);
 
   // Calculate scroll progress for exit transition

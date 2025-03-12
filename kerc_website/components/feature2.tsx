@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import {
   ArrowUpRight,
   Banknote,
@@ -10,175 +10,141 @@ import {
   Users,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { motion, useScroll, useTransform, useInView } from "framer-motion";
+import { ResponsiveContainer } from "./ui/responsive-container";
+import { AnimatedElement } from "./ui/animated-element";
+import { useSequencedAnimation } from "@/hooks/useSequencedAnimation";
+import { VIEWPORT } from "@/utils/animation-config";
+import { CurvedSectionTransition } from "./ui/curved-section-transition";
+import { useScrollPosition } from "@/hooks/useScrollPosition";
+
+const features = [
+  {
+    icon: Banknote,
+    title: "Real-World Revenue",
+    description: "Earn revenue from tangible healthcare operations",
+  },
+  {
+    icon: Building2,
+    title: "Medical Clinic Ownership",
+    description: "KERC owns and operates medical clinics",
+  },
+  {
+    icon: LineChart,
+    title: "Growing Payouts",
+    description: "Stable and increasing staking rewards",
+  },
+  {
+    icon: ArrowUpRight,
+    title: "Growth Market",
+    description: "Revenue from one of the fastest growing healthcare sectors",
+  },
+  {
+    icon: ShieldCheck,
+    title: "Secure Investment",
+    description: "Healthcare industry stability provides security",
+  },
+  {
+    icon: Users,
+    title: "Proven Management",
+    description: "Experienced team with track record of success",
+  },
+];
 
 export default function KercFeature() {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: false, amount: 0.3 });
-
-  // Use component-specific scroll progress
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start start", "end start"],
-  });
-
-  // Transform border radius based on scroll
-  const borderRadius = useTransform(
-    scrollYProgress,
-    [0, 0.1],
-    ["0rem", "2rem"]
+  const ref = useRef<HTMLDivElement>(null);
+  const { isInView, getSequencedDelay } = useSequencedAnimation(
+    ref,
+    2.0,
+    VIEWPORT
   );
+  
+  const scrollY = useScrollPosition();
+  const [sectionHeight, setSectionHeight] = useState(800);
+  const [sectionTop, setSectionTop] = useState(0);
+  
+  // Update section dimensions and position on mount and resize
+  useEffect(() => {
+    const updateDimensions = () => {
+      if (ref.current) {
+        const rect = ref.current.getBoundingClientRect();
+        setSectionHeight(rect.height);
+        setSectionTop(rect.top + window.scrollY);
+      }
+    };
+    
+    updateDimensions();
+    window.addEventListener('resize', updateDimensions);
+    window.addEventListener('scroll', updateDimensions);
+    return () => {
+      window.removeEventListener('resize', updateDimensions);
+      window.removeEventListener('scroll', updateDimensions);
+    };
+  }, []);
 
-  // Transform padding based on scroll
-  const padding = useTransform(scrollYProgress, [0, 0.1], ["0px", "16px"]);
-
-  // Transform container width and height based on scroll
-  const containerWidth = useTransform(
-    scrollYProgress,
-    [0, 0.1],
-    ["100%", "calc(100% - 32px)"]
+  // Calculate scroll progress for exit transition
+  const viewThreshold = sectionHeight * 0.15; // Start effect when 15% scrolled
+  const scrollProgress = Math.max(
+    0,
+    Math.min(1, (scrollY - sectionTop + viewThreshold) / (sectionHeight * 0.3))
   );
-
-  const containerHeight = useTransform(
-    scrollYProgress,
-    [0, 0.1],
-    ["100vh", "auto"]
-  );
-
-  const features = [
-    {
-      icon: Banknote,
-      title: "Real-World Revenue",
-      description: "Earn revenue from tangible healthcare operations",
-    },
-    {
-      icon: Building2,
-      title: "Medical Clinic Ownership",
-      description: "KERC owns and operates medical clinics",
-    },
-    {
-      icon: LineChart,
-      title: "Growing Payouts",
-      description: "Stable and increasing staking rewards",
-    },
-    {
-      icon: ArrowUpRight,
-      title: "Growth Market",
-      description: "Revenue from one of the fastest growing healthcare sectors",
-    },
-    {
-      icon: ShieldCheck,
-      title: "Secure Investment",
-      description: "Healthcare industry stability provides security",
-    },
-    {
-      icon: Users,
-      title: "Proven Management",
-      description: "Experienced team with track record of success",
-    },
-  ];
 
   return (
-    <motion.div ref={ref} className="relative h-screen" style={{ padding }}>
-      <motion.div
-        className="overflow-hidden border-0 bg-gradient-to-r from-gray-900 to-gray-800 h-full"
+    <CurvedSectionTransition
+      isExiting={true}
+      position="bottom"
+      curveHeight={scrollProgress * 100}
+      bgColor="transparent"
+      className="relative w-full min-h-screen"
+    >
+      <ResponsiveContainer
+        ref={ref}
+        className="relative w-full min-h-screen"
+        gradient={true}
+        gradientFrom="gray-900"
+        gradientTo="gray-800"
+        padding={false}
+        maxWidth="none"
+        fullWidth={true}
         style={{
-          borderRadius: isInView ? borderRadius : "0rem",
-          width: isInView ? containerWidth : "100%",
-          minHeight: isInView ? containerHeight : "100vh",
+          transform: scrollProgress === 0 ? 'none' : `scale(${1 - scrollProgress * 0.05})`,
+          borderRadius: `${scrollProgress * 30}px`,
+          transition: "transform 0.1s ease-out, border-radius 0.1s ease-out"
         }}
       >
-        <motion.div
-          className="flex flex-col justify-center h-full"
-          style={{ minHeight: isInView ? containerHeight : "100vh" }}
-        >
-          <div className="p-4 sm:p-6 lg:p-8">
-            <motion.div
-              className="max-w-3xl mx-auto text-center mb-12"
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: isInView ? 1 : 0, y: isInView ? 0 : -20 }}
-              transition={{ duration: 0.6 }}
-            >
-              <motion.h2
-                className="text-3xl font-bold text-white"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: isInView ? 1 : 0 }}
-                transition={{ duration: 0.6, delay: 0.1 }}
-              >
-                Discover the future of{" "}
-                <motion.span
-                  className="text-white"
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{
-                    opacity: isInView ? 1 : 0,
-                    scale: isInView ? 1 : 0.9,
-                  }}
-                  transition={{ duration: 0.6, delay: 0.4 }}
-                >
-                  passive income
-                </motion.span>
-              </motion.h2>
-              <motion.p
-                className="mt-4 text-lg text-gray-300"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: isInView ? 1 : 0 }}
-                transition={{ duration: 0.6, delay: 0.2 }}
-              >
-                Earn effortlessly from the healthcare industry without any
-                management headaches.
-              </motion.p>
-            </motion.div>
+        <div className="container mx-auto relative z-10 flex flex-col justify-center h-full py-16 min-h-screen">
+          <AnimatedElement
+            variant="fadeInUp"
+            isInView={isInView}
+            delay={getSequencedDelay(0)}
+            className="max-w-3xl mx-auto text-center mb-12"
+          >
+            <h2 className="text-3xl text-white font-bold tracking-tighter sm:text-4xl md:text-5xl mb-4">
+              Discover the future of{" "}
+              <span className="text-blue-400">passive income</span>
+            </h2>
+            <p className="text-xl text-gray-300">
+              Earn effortlessly from the healthcare industry without any
+              management headaches.
+            </p>
+          </AnimatedElement>
 
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 px-4 md:px-8 lg:px-16">
-              {features.map((feature, index) => (
-                <motion.div
-                  key={index}
-                  className="flex flex-col items-center gap-2 rounded-xl bg-white/30 p-4 text-center shadow-sm"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: isInView ? 1 : 0, y: isInView ? 0 : 20 }}
-                  transition={{
-                    duration: 0.5,
-                    delay: 0.1 + index * 0.1,
-                    type: "spring",
-                    stiffness: 50,
-                  }}
-                  whileHover={{
-                    scale: 1.05,
-                    boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.2)",
-                  }}
-                >
-                  <feature.icon className="h-10 w-10 text-primary" />
-                  <h3 className="font-semibold">{feature.title}</h3>
-                  <p className="text-sm text-white">{feature.description}</p>
-                </motion.div>
-              ))}
-            </div>
-
-            <motion.div
-              className="mt-12 text-center"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: isInView ? 1 : 0, y: isInView ? 0 : 20 }}
-              transition={{ duration: 0.6, delay: 0.7 }}
-            >
-              <motion.button
-                className="px-8 py-3 bg-blue-600 text-white font-semibold rounded-full shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-900"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 px-4 md:px-8 lg:px-16">
+            {features.map((feature, index) => (
+              <AnimatedElement
+                key={index}
+                variant="fadeInUp"
+                isInView={isInView}
+                delay={getSequencedDelay(index + 1)}
+                className="flex flex-col items-center gap-2 rounded-xl bg-white/10 p-6 text-center shadow-sm backdrop-blur-sm"
               >
-                Learn More About KERC
-              </motion.button>
-            </motion.div>
+                <feature.icon className="h-8 w-8 text-blue-400" />
+                <h3 className="text-lg font-semibold text-white">{feature.title}</h3>
+                <p className="text-gray-300">{feature.description}</p>
+              </AnimatedElement>
+            ))}
           </div>
-        </motion.div>
-      </motion.div>
-    </motion.div>
+        </div>
+      </ResponsiveContainer>
+    </CurvedSectionTransition>
   );
 }

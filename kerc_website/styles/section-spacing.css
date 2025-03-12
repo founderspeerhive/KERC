@@ -1,0 +1,12 @@
+/* Custom spacing for sections */
+.feature-section-wrapper {
+  margin-bottom: 0;
+  position: relative;
+  z-index: 10;
+}
+
+.feature2-section-wrapper {
+  margin-top: -80px;
+  position: relative;
+  z-index: 5;
+}
